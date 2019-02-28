@@ -18,14 +18,11 @@
 
   displaySwitch.addEventListener('click', event => {
     console.log(event.target)
-    showCard.classList.remove('showing')
-    showList.classList.remove('showing')
     if (event.target.matches('.show-card')) {
-      event.target.classList.add('showing')
+      localStorage.setItem('display', 'card')
     } else if (event.target.matches('.show-list')) {
-      event.target.classList.add('showing')
+      localStorage.setItem('display', 'list')
     }
-    console.log(showCard.classList, showList.classList)
     displayDataList(data)
   })
 
@@ -33,9 +30,9 @@
   displayDataList(data)
 
   function displayDataList(data) {
+    let display = localStorage.getItem('display') || 'card'
     let htmlContent = ''
-    if (!showCard.classList.contains('showing')) {
-      console.log('list')
+    if (display === 'list') {
       htmlContent += `<ul class="list list-group">`
       data.forEach(function (item, index) {
         htmlContent += `
@@ -47,9 +44,8 @@
             <div class="list-footer float-right" d>
               <!----- "More" button ------>
               <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
-
               <!----- favorite button ----> 
-              <button class="btn btn-info btn-add-favorite" data-id="${item.id}">+</button>
+              <button class="btn btn-danger btn-remove-favorite" data-id="${item.id}">-</button>
             </div>
           </li>
       `
@@ -57,8 +53,7 @@
       htmlContent += `
         </ul >
       `
-    } else if (showCard.classList.contains('showing')) {
-      console.log('card')
+    } else if (display === 'card') {
       data.forEach(function (item, index) {
         htmlContent += `
         <div class="col-sm-3">
@@ -72,37 +67,15 @@
              <div class="card-footer">
               <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
               <!-- favorite button --> 
-              <button class="btn btn-danger btn-remove-favorite" data-id="${item.id}">+</button>
+              <button class="btn btn-danger btn-remove-favorite" data-id="${item.id}">-</button>
             </div>
           </div>
         </div>
       `
-
       })
     }
     dataPanel.innerHTML = htmlContent
   }
-
-  // function displayDataList(data) {
-  //   let htmlContent = ''
-  //   data.forEach(function (item, index) {
-  //     htmlContent += `
-  //       <div class="col-sm-3">
-  //         <div class="card mb-2">
-  //           <img class="card-img-top " src="${POSTER_URL}${item.image}" alt="Card image cap">
-  //           <div class="card-body movie-item-body">
-  //             <h6 class="card-title">${item.title}</h5>
-  //           </div>
-  //           <div class="card-footer">
-  //             <button class="btn btn-primary btn-show-movie" data-toggle="modal" data-target="#show-movie-modal" data-id="${item.id}">More</button>
-  //             <button class="btn btn-danger btn-remove-favorite" data-id="${item.id}">X</button>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     `
-  //   })
-  //   dataPanel.innerHTML = htmlContent
-  // }
 
   function removeFavoriteItem(id) {
     // find movie by id

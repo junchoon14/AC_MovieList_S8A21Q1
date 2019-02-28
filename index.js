@@ -54,21 +54,19 @@
 
   displaySwitch.addEventListener('click', event => {
     console.log(event.target)
-    showCard.classList.remove('showing')
-    showList.classList.remove('showing')
     if (event.target.matches('.show-card')) {
-      event.target.classList.add('showing')
+      localStorage.setItem('display', 'card')
     } else if (event.target.matches('.show-list')) {
-      event.target.classList.add('showing')
+      localStorage.setItem('display', 'list')
     }
-    console.log(showCard.classList, showList.classList)
     displayDataList(data)
   })
 
   function displayDataList(data) {
+    let display = localStorage.getItem('display') || 'card'
     let htmlContent = ''
-    if (!showCard.classList.contains('showing')) {
-      console.log('list')
+    if (display === 'list') {
+      console.log(display)
       htmlContent += `<ul class="list list-group">`
       data.forEach(function (item, index) {
         htmlContent += `
@@ -90,8 +88,8 @@
       htmlContent += `
         </ul >
       `
-    } else if (showCard.classList.contains('showing')) {
-      console.log('card')
+    } else if (display === 'card') {
+      console.log(display)
       data.forEach(function (item, index) {
         htmlContent += `
         <div class="col-sm-3">
@@ -114,6 +112,7 @@
       })
     }
     dataPanel.innerHTML = htmlContent
+
   }
 
   function showMovie(id) {
